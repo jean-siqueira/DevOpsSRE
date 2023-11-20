@@ -1,0 +1,74 @@
+- name:  Update the apt package index
+  shell: apt-get update
+  become: yes
+- name: ensure nginx is at the latest version
+  apt: name=nginx state=latest
+  become: yes
+- name: start nginx
+  service:
+    name: nginx
+    state: started
+  become: yes
+- name: copy the dummy config file
+  copy:
+    src: ../files/nginx/truncate.cfg
+    dest: /etc/nginx/sites-available/default
+  become: yes  
+- name: Altera a url no arquivo de balancer dummy
+  replace:
+    path: /etc/nginx/sites-available/default
+    regexp: "DOWNSTREAM_URL"
+    replace: "{{downstream.url}}"
+- name: Altera a url no dominio do arquivo de dummy balancer
+  replace:
+    path: /etc/nginx/sites-available/default
+    regexp: "API_HOST"
+    replace: "{{domain.url}}"  
+- name:  install Certbot
+  shell: apt-get install certbot python3-certbot-nginx -y
+  become: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Executa instalação certbot
+  shell: "certbot --nginx -m {{domain.email}} -d {{domain.url}} --agree-tos -n"
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: stop nginx
+  service:
+    name: nginx
+    state: stopped
+  become: yes
+- name: Remove Link
+  ansible.builtin.file:
+    path: /etc/nginx/sites-available/default
+    state: "absent"
+- name: copy the nginx config file and restart nginx
+  copy:
+    src: ../files/nginx/loadbalancer.cfg
+    dest: /etc/nginx/sites-available/loadbalancer.cfg
+  become: yes    
+- name: create symlink
+  file:
+    src: /etc/nginx/sites-available/loadbalancer.cfg
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+  become: yes
+- name: Altera a url no arquivo de balancer
+  replace:
+    path: /etc/nginx/sites-available/loadbalancer.cfg
+    regexp: "DOWNSTREAM_URL"
+    replace: "{{downstream.url}}"
+- name: Altera a url no dominio do balancer
+  replace:
+    path: /etc/nginx/sites-available/loadbalancer.cfg
+    regexp: "API_HOST"
+    replace: "{{domain.url}}"
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: yes
+
+

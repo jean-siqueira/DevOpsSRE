@@ -1,0 +1,9 @@
+---
+# vars file for create
+
+downstream:
+  url: www.coffeeandit.store
+
+domain:
+  url: ansible.coffeeandit.com.br
+  email: coffeeandit@coffeeandit.com.br

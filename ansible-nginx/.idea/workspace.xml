@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8d1e4bad-9125-477b-a0a0-b133d164cc92" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/nginx_install_balancer.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/.travis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/defaults/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/files/nginx/static-site-src/ansible-logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/files/nginx/static-site-src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/files/nginx/static_site.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/handlers/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/meta/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/tasks/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/tests/inventory" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/tests/test.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/create/vars/main.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inventory.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/inventory.cfg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx_install.yml" beforeDir="false" afterPath="$PROJECT_DIR$/nginx_install.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1cuUIa1QVeLLNxZJGsmFUbUCT2V" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/balancer/files" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/create/files" />
+      <recent name="$PROJECT_DIR$/nginx" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8d1e4bad-9125-477b-a0a0-b133d164cc92" name="Default Changelist" comment="" />
+      <created>1591377892029</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1591377892029</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="743" y="311" width="424" height="480" key="FileChooserDialogImpl" timestamp="1594813076623">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="743" y="311" width="424" height="480" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1594813076623" />
+    <state x="523" y="168" width="864" height="766" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1591379610311">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="523" y="168" width="864" height="766" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1591379610311" />
+    <state x="651" y="292" width="618" height="522" key="find.popup" timestamp="1594812911106">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="651" y="292" width="618" height="522" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1594812911106" />
+  </component>
+</project>
