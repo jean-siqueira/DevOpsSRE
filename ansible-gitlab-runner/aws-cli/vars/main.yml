@@ -1,0 +1,5 @@
+aws:
+  region: us-east-1
+  accountid: 049389827536
+  servicename: coffeeandit-aula
+  home: /home/cleber/.aws

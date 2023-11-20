@@ -1,0 +1,12 @@
+---
+# vars file for ansible-gitlab-runner
+
+gitlab:
+  password: 123mudar
+  token: change 
+  url: https://gitlab.com/
+
+container_count: 4
+default_container_name: docker
+default_container_image: ubuntu
+default_container_command: sleep 1d

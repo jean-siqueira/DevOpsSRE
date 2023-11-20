@@ -1,0 +1,7 @@
+aws:
+  region: us-east-2
+  accountid: 049389827536
+  servicename: coffeeandit-aula
+  home: /home/cleber/.aws
+eks:
+  cluster: coffeeandit-eks-Cez35GI6

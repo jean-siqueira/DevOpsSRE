@@ -1,0 +1,6 @@
+---
+# vars file for ansible-gitlab-runner
+
+eks:
+  region: us-east-1
+  cluster_name: coffeeandit-cluster-aula 

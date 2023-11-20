@@ -1,0 +1,127 @@
+- name: "Update Repository cache"
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    force_apt_get: true
+  become: yes
+- name: Download the binary for your system
+  become: yes
+  get_url:
+    url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+    dest: /usr/local/bin/gitlab-runner
+    mode: 0755
+- name: Dando permissão para o binario
+  shell: chmod +x /usr/local/bin/gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Criado grupo docker
+  shell: groupadd docker
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines 
+- name: Create a login user
+  user:
+    name: gitlab-runner
+    password: '{{gitlab.password}}'
+    groups: 
+     - sudo
+     - docker
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: yes
+    home: /home/gitlab-runner
+- name: Install aptitude
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: true
+- name: Install required system packages
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - sudo
+    - software-properties-common
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
+    state: latest
+    update_cache: true  
+
+- name: Install as a service
+  shell: gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines      
+- name: Run the service
+  shell: gitlab-runner start
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present    
+- name: Update apt and install docker-ce
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: true   
+- name: Install Docker Module for Python
+  pip:
+    name: docker
+- name: start docker
+  service:
+    name: docker
+    state: started
+  become: yes
+- name: Pull default Docker image
+  community.docker.docker_image:
+    name: "{{ default_container_image }}"
+    source: pull
+
+- name: Create default containers
+  community.docker.docker_container:
+    name: "{{ default_container_name }}{{ item }}"
+    image: "{{ default_container_image }}"
+    command: "{{ default_container_command }}"
+    state: present
+  with_sequence: count={{ container_count }}
+- name: Registrando o Runner
+  shell: gitlab-runner register --url '{{gitlab.url}}' --registration-token '{{gitlab.token}}' --non-interactive --tag-list "docker,aws,coffeeandit" --executor "docker" --locked="false" --docker-tlsverify=false --docker-image "docker:stable" --name="devops-sre-runner"
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines    
+
+- name: Adicionando o usuário gitlab-runner
+  shell: usermod -aG docker gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines  
+
+- name: Adicionando o usuário ubuntu
+  shell: usermod -aG docker ubuntu
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines  
+
+- name: Alterando a permissão do daemon
+  shell: chmod 666 /var/run/docker.sock
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines  

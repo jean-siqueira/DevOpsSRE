@@ -1,0 +1,12 @@
+- name: Cria a pasta de Configuração do Kube
+  shell: mkdir -p /home/gitlab-runner/.kube
+  become: yes
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Altera a permissão do arquivo
+  shell: chown -Rf gitlab-runner:gitlab-runner /home/gitlab-runner/.kube
+  become: yes
+  register: out
+- debug: var=out.stdout_lines    
+

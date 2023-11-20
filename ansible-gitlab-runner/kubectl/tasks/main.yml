@@ -1,0 +1,11 @@
+- name: Baixando o kubectl
+  shell: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Instalando o kubectl
+  shell: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+  become: yes
+  register: out
+- debug: var=out.stdout_lines

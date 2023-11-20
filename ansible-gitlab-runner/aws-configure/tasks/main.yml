@@ -1,0 +1,63 @@
+- name: Cria diretorio de Configuracao
+  file:
+    path: /home/ubuntu/.aws
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0775'    
+  become: true      
+  register: out
+- debug: var=out.stdout_lines  
+- name: Cria diretorio de Configuracao Gitlab-Runner
+  file:
+    path: /home/gitlab-runner/.aws
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0775'    
+  become: true      
+  register: out
+- debug: var=out.stdout_lines 
+- name: copy config file
+  copy:
+    src: '{{aws.home}}/config'
+    dest: /home/ubuntu/.aws/config
+- name: copy credentials file
+  copy:
+    src: '{{aws.home}}/credentials'
+    dest: /home/ubuntu/.aws/credentials
+
+
+- name: Lista a configuração
+  shell: aws configure list
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Copia configuração aws para o Runner
+  shell: cp /home/ubuntu/.aws/* /home/gitlab-runner/.aws/
+  become: yes
+  register: out
+- debug: var=out.stdout_lines    
+
+- name: copy script file
+  copy:
+    src: ../files/aws_profile.sh
+    dest: /home/gitlab-runner/
+  become: yes
+
+- name: Permissao de execucao
+  shell: chmod +x /home/gitlab-runner/aws_profile.sh
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Altera o nome do cluster
+  replace:
+    path: /home/gitlab-runner/aws_profile.sh
+    regexp: "CLUSTER"
+    replace: "{{eks.cluster}}"
+  
+- name: Altera a regiao
+  replace:
+    path: /home/gitlab-runner/aws_profile.sh
+    regexp: "REGION"
+    replace: "{{aws.region}}"

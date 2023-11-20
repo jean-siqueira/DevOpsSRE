@@ -1,0 +1,34 @@
+- name: "Update Repository cache"
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    force_apt_get: true
+  become: yes
+- name: Install required system packages
+  apt:
+    pkg:
+    - unzip
+    state: latest
+    update_cache: true   
+- name: Baixando o cliente AWS
+  shell: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Instalando o Cliente
+  shell: unzip awscliv2.zip
+  become: yes
+  register: out
+- debug: var=out.stdout_lines 
+- name: Instalando o cliente AWS
+  shell: "./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli"
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Validando o cliente AWS
+  shell: "aws --version"
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines

@@ -1,0 +1,13 @@
+---
+# vars file for ansible-gitlab-runner
+
+gitlab:
+  password: 123mudar
+  token: GR1348941PaQaut7ZLWFVi_FZMz83 
+  url: https://gitlab.com/
+  name: coffeeandit-shell
+
+container_count: 4
+default_container_name: docker
+default_container_image: ubuntu
+default_container_command: sleep 1d

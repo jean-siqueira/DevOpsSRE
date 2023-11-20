@@ -1,0 +1,154 @@
+- name: "Update Repository cache"
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    force_apt_get: true
+  become: yes
+- name: Download the binary for your system
+  become: yes
+  get_url:
+    url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+    dest: /usr/local/bin/gitlab-runner
+    mode: 0755
+- name: Dando permissão para o binario
+  shell: chmod +x /usr/local/bin/gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+- name: Create a login user
+  user:
+    name: gitlab-runner
+    password: '{{gitlab.password}}'
+    groups: 
+     - sudo
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: yes
+    home: /home/gitlab-runner
+- name: Install aptitude
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: true
+- name: Install required system packages
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - sudo
+    - software-properties-common
+    state: latest
+    update_cache: true  
+
+- name: Unregister Service
+  shell: gitlab-runner unregister --name='{{gitlab.name}}'
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines  
+
+- name: Uninstall Service
+  shell: gitlab-runner verify --delete 
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines    
+
+
+- name: Run the service
+  shell: gitlab-runner start
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Install as a service
+  shell: gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines      
+- name: Run the service
+  shell: gitlab-runner start
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Registrando o Runner
+  shell: gitlab-runner register --url '{{gitlab.url}}' --registration-token '{{gitlab.token}}' --non-interactive --tag-list "coffeeandit-runner-shell" --executor "shell" --locked="true" --name='{{gitlab.name}}'
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines    
+
+- name: Remove bash_logout
+  shell: rm -r /home/gitlab-runner/.bash_logout
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines 
+
+- name: Remove bash_logout
+  shell: rm -r /home/ubuntu/.bash_logout
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines 
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present    
+- name: Update apt and install docker-ce
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: true
+
+- name: start docker
+  service:
+    name: docker
+    state: started
+  become: yes
+
+- name: Adicionando o usuário gitlab-runner
+  shell: usermod -aG docker gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines  
+
+- name: Adicionando o usuário ubuntu
+  shell: usermod -aG docker ubuntu
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines 
+
+- name: Verificando acesso ao Docker
+  shell: sudo -u gitlab-runner -H docker info
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+
+- name: Removendo password gitlab-runner
+  shell: sudo passwd -d gitlab-runner
+  become: yes
+  ignore_errors: yes
+  register: out
+- debug: var=out.stdout_lines
+
+- name: copy new sudousers
+  copy:
+    src: ../files/sudoers
+    dest: /etc/sudoers
+  become: yes  
